@@ -90,7 +90,6 @@ def get_billform_for(project, set_default=True, **kwargs):
 
 
 class CommaDecimalField(DecimalField):
-
     """A class to deal with comma in Decimal Field"""
 
     def process_formdata(self, value):
@@ -137,12 +136,15 @@ class EditProjectForm(FlaskForm):
     )
     contact_email = StringField(_("Email"), validators=[DataRequired(), Email()])
 
-    # Create a checkbox in project settings to enable project history (keeps track of project transactions,
-    # like adding/settling bills). "Y/N" determines if transaction history is being recorded for the project.
+    #Create a checkbox in project settings to enable project history
+    #(keeps track of project transactions, like adding/settling bills).
+    #"Y/N" determines if transaction history is being recorded for the project.
     project_history = BooleanField(_("Enable project history"))
 
-    # Create a checkbox in project settings to allow for recording source IP address from a given transaction listed
-    # in project history. "Y/N" determines if an IP address will be attached to a created entry in project history.
+    #Create a checkbox in project settings to allow for
+    #recording source IP address from a given transaction listed in project history.
+
+    #"Y/N" determines if an IP address will be attached to a created entry in project history.
     ip_recording = BooleanField(_("Use IP tracking for project history"))
 
     currency_helper = CurrencyConverter()
@@ -191,9 +193,9 @@ class EditProjectForm(FlaskForm):
     def validate_default_currency(self, field):
         project = Project.query.get(self.id.data)
         if (
-            project is not None
-            and field.data == CurrencyConverter.no_currency
-            and project.has_multiple_currencies()
+                project is not None
+                and field.data == CurrencyConverter.no_currency
+                and project.has_multiple_currencies()
         ):
             msg = _(
                 "This project cannot be set to 'no currency'"
@@ -201,9 +203,9 @@ class EditProjectForm(FlaskForm):
             )
             raise ValidationError(msg)
         if (
-            project is not None
-            and field.data != project.default_currency
-            and project.has_bills()
+                project is not None
+                and field.data != project.default_currency
+                and project.has_bills()
         ):
             msg = _(
                 "Cannot change project currency because currency conversion is broken"
@@ -215,11 +217,11 @@ class EditProjectForm(FlaskForm):
         project.name = self.name.data
 
         if (
-            # Only update password if a new one is provided
-            self.password.data
-            # Only update password if different from the previous one,
-            # to prevent spurious log entries
-            and not check_password_hash(project.password, self.password.data)
+                # Only update password if a new one is provided
+                self.password.data
+                # Only update password if different from the previous one,
+                # to prevent spurious log entries
+                and not check_password_hash(project.password, self.password.data)
         ):
             project.password = generate_password_hash(self.password.data)
 
@@ -461,12 +463,12 @@ class MemberForm(FlaskForm):
         if field.data == self.name.default:
             raise ValidationError(_("The participant name is invalid"))
         if (
-            not self.edit
-            and Person.query.filter(
-                Person.name == field.data,
-                Person.project == self.project,
-                Person.activated,
-            ).all()
+                not self.edit
+                and Person.query.filter(
+            Person.name == field.data,
+            Person.project == self.project,
+            Person.activated,
+        ).all()
         ):  # NOQA
             raise ValidationError(_("This project already have this participant"))
 
