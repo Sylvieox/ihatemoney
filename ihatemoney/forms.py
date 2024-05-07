@@ -133,6 +133,7 @@ class EditProjectForm(FlaskForm):
     password = PasswordField(
         _("New private code"),
         description=_("Enter a new code if you want to change it"),
+        #adfasdfsa
     )
     contact_email = StringField(_("Email"), validators=[DataRequired(), Email()])
 
